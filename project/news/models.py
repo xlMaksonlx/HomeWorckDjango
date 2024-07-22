@@ -10,7 +10,7 @@ class Author(models.Model):
     def update_rating(self):
         post_rating = self.posts.aggregate(pr=Coalesce(Sum('rating'), 0)).get('pr')
         comments_rating = self.user.comments.aggregate(cr=Coalesce(Sum('rating'), 0))['cr']
-        posts_comment_rating = self.posts.aggregate(pcr=Coalesce(Sum('rating'),0))['pcr']
+        posts_comment_rating = self.posts.aggregate(pcr=Coalesce(Sum('comment__rating'),0))['pcr']
 
         self.rating = post_rating * 3 + comments_rating + posts_comment_rating
         self.save()
@@ -22,8 +22,16 @@ class Category(models.Model):
 
 
 class Post(models.Model):
+    article = 'AR'
+    news = 'NE'
+
+    POSITIONS =[
+        (article, 'AR'),
+        (news, 'NE'),
+    ]
+
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='posts')
-    news_art = models.BooleanField
+    news_art = models.CharField(max_length=2,choices=POSITIONS,default='NE')
     date_in = models.DateTimeField(auto_now_add=True)
     category = models.ManyToManyField(Category, through='PostCategory')
     title = models.CharField(max_length=255)
