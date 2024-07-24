@@ -14,6 +14,8 @@ comm1 = Comment.objects.create(post = p1, user=u1)
 comm2 = Comment.objects.create(post = p1, user=u2)
 comm3 = Comment.objects.create(post = p3, user=u1)
 comm4 = Comment.objects.create(post = p2, user=u2)
+comm5 = Comment.objects.create(post = p3, user=u1)
+comm6 = Comment.objects.create(post = p3, user=u2)
 PostCategory.objects.create(post = p1, category = cat1)
 PostCategory.objects.create(post = p1, category = cat2)
 PostCategory.objects.create(post = p2, category = cat1)
@@ -37,6 +39,9 @@ a1.update_rating()
 a2.update_rating()
 authors = Author.objects.all().order_by('-rating')
 authors.values('user__username', 'rating')[0]
-
-
+posts = Post.objects.all().order_by('-rating')
+posts.values('author__user__date_joined', 'rating', 'title')[0]
+posts.preview()
+comments = Comment.objects.filter(post = posts[0])
+comments.values('date_in', 'user__username', 'rating', 'text')
 

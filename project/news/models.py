@@ -17,6 +17,7 @@ class Author(models.Model):
 
 
 
+
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
@@ -35,7 +36,7 @@ class Post(models.Model):
     date_in = models.DateTimeField(auto_now_add=True)
     category = models.ManyToManyField(Category, through='PostCategory')
     title = models.CharField(max_length=255)
-    text = models.TextField()
+    text = models.TextField(default='')
     rating = models.IntegerField(default=0)
 
     def like(self):
@@ -64,7 +65,7 @@ class PostCategory(models.Model):
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
-    text = models.TextField
+    text = models.TextField(default='')
     date_in = models.DateTimeField(auto_now_add=True)
     rating = models.IntegerField(default=0)
 
