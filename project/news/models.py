@@ -50,10 +50,13 @@ class Post(models.Model):
         return self.rating
 
     def preview(self):
-        if len(self.text) > 124:
-            return f'{self.text[:124]} ...'
+        if len(self.text) > 20:
+            return f'{self.text[:20]} ...'
         else:
             return f'{self.text[:len(self.text)]}'
+
+    def __str__(self):
+        return f'{self.title}: {self.text}'
 
 
 class PostCategory(models.Model):
