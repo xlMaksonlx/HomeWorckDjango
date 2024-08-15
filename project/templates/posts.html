@@ -1,6 +1,9 @@
 <!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
 {% extends 'flatpages/default.html' %}
 
+{# Импортируем модуль с нашим тегом #}
+{% load custom_tags %}
+
 <!-- Название у нас будет products -->
 {% block title %}
 Posts
@@ -10,6 +13,14 @@ Posts
 {% block content %}
 <h1>Все новости</h1>
 <h3>{{ time_now|date:'M d Y' }}</h3>
+
+    {# Добавляем форму, которая объединяет набор полей, которые будут отправляться в запросе #}
+   <form action="" method="get">
+       {# Переменная, которую мы передали через контекст, может сгенерировать нам форму с полями #}
+       {{ filterset.form.as_p }}
+       {# Добавим кнопку отправки данных формы #}
+       <input type="submit" value="Найти" />
+   </form>
 <hr>
 {% if posts %}
        <table> <!-- Начинаем описывать таблицу -->
@@ -41,4 +52,28 @@ Posts
        <!-- Если товаров нет, говорим, что товаров нет ;) -->
        <h2>Новостей нет!</h2>
    {% endif %}
+
+    {# Добавляем пагинацию на страницу #}
+
+   {# Информация о предыдущих страницах #}
+   {% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {# Информация о текущей странице #}
+   {{ page_obj.number }}
+
+   {# Информация о следующих страницах #}
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
 {% endblock content %}
