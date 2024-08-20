@@ -15,6 +15,9 @@ class Author(models.Model):
         self.rating = post_rating * 3 + comments_rating + posts_comment_rating
         self.save()
 
+    def __str__(self):
+        return self.user.username
+
 
 
 
@@ -27,8 +30,8 @@ class Post(models.Model):
     news = 'NE'
 
     POSITIONS =[
-        (article, 'AR'),
-        (news, 'NE'),
+        (article, 'article'),
+        (news, 'news'),
     ]
 
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='posts')
