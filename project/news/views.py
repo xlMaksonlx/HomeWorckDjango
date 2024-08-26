@@ -38,13 +38,25 @@ class PostCreate(CreateView):
     model = Post
     template_name = 'post_edit.html'
 
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        if self.request.path == '/post/articles/create/':
+            post.news_art = 'AR'
+        elif self.request.path == '/post/news/create/':
+            post.news_art = 'NE'
+
+        return super().form_valid(form)
+
+
 class PostUpdate(UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
 
+
 class PostDelete(DeleteView):
     model = Post
     template_name = 'post_delete.html'
+    success_url = 'posts_list'
 
 
