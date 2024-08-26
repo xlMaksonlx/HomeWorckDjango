@@ -1,4 +1,7 @@
 from datetime import datetime
+
+# from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .filters import PostFilter
 from .forms import PostForm
@@ -44,7 +47,7 @@ class PostCreate(CreateView):
             post.news_art = 'AR'
         elif self.request.path == '/post/news/create/':
             post.news_art = 'NE'
-
+        post.save()
         return super().form_valid(form)
 
 
@@ -52,6 +55,17 @@ class PostUpdate(UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        post = self.get_object()
+
+        context = {'post_id': post.pk}
+        if self.request.path == f'/post/news/{post.pk}/edit/' and post.news_art != 'NE':
+            return render(self.request, 'invalid_articles_edit.html', context=context)
+        elif self.request.path == f'/post/articles/{post.pk}/edit/' and post.news_art != 'AR':
+            return render(self.request, 'invalid_news_edit.html', context=context)
+        return super(PostUpdate, self.dispatch(request, *args, **kwargs))
+
 
 
 class PostDelete(DeleteView):
