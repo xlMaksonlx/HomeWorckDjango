@@ -1,6 +1,5 @@
 from datetime import datetime
 
-# from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .filters import PostFilter
@@ -64,7 +63,7 @@ class PostUpdate(UpdateView):
             return render(self.request, 'invalid_articles_edit.html', context=context)
         elif self.request.path == f'/post/articles/{post.pk}/edit/' and post.news_art != 'AR':
             return render(self.request, 'invalid_news_edit.html', context=context)
-        return super(PostUpdate, self.dispatch(request, *args, **kwargs))
+        return super(PostUpdate, self).dispatch(request, *args, **kwargs)
 
 
 
