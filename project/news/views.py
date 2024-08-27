@@ -5,6 +5,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .filters import PostFilter
 from .forms import PostForm
 from .models import Post
+from django.urls import reverse_lazy
 
 
 class PostsListView(ListView):
@@ -70,6 +71,16 @@ class PostUpdate(UpdateView):
 class PostDelete(DeleteView):
     model = Post
     template_name = 'post_delete.html'
-    success_url = 'posts_list'
+    success_url = reverse_lazy('posts_list')
+
+    # def dispatch(self, request, *args, **kwargs):
+    #     post = self.get_object()
+    #
+    #     context = {'post_id': post.pk}
+    #     if self.request.path == f'/post/news/{post.pk}/delete/' and post.news_art != 'NE':
+    #         return render(self.request, 'invalid_articles_edit.html', context=context)
+    #     elif self.request.path == f'/post/articles/{post.pk}/delete/' and post.news_art != 'AR':
+    #         return render(self.request, 'invalid_news_edit.html', context=context)
+    #     return super(PostUpdate, self).dispatch(request, *args, **kwargs)
 
 
